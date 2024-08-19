@@ -21,6 +21,25 @@ module S3Light
         response.code == 200
       end
 
+      def create_batch(names:, concurrency: 10)
+        names.to_h do |name|
+          [name, new(name: name).save!]
+        end
+      end
+
+      def destroy_batch(names:, concurrency: 10)
+        names.to_h do |name|
+          S3Light::Bucket.new(@client, name).__destroy!
+          [name, true]
+        end
+      end
+
+      def exists_batch?(names:, concurrency: 10)
+        names.to_h do |name|
+          [name, exists?(name: name)]
+        end
+      end
+
       def find_by(name:)
         all.find { |bucket| bucket.name == name }
       end

@@ -1,0 +1,120 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://localhost:9000/
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+    headers:
+      User-Agent:
+      - S3Light/0.0.1
+      Host:
+      - localhost
+      X-Amz-Date:
+      - 20240819T220146Z
+      X-Amz-Content-Sha256:
+      - UNSIGNED-PAYLOAD
+      Authorization:
+      - AWS4-HMAC-SHA256 Credential=adminadmin/20240819/us-east-1/s3/aws4_request,
+        SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=76a8c319021023bdd941cd5ecd73279a32465d68c3dc12f370b91132f4229c8d
+      Connection:
+      - Keep-Alive
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Accept-Ranges:
+      - bytes
+      Content-Length:
+      - '362'
+      Content-Type:
+      - application/xml
+      Server:
+      - MinIO
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      - Origin
+      X-Amz-Id-2:
+      - dd9025bab4ad464b049177c95eb6ebf374d3b3fd1af9251148b658df7ac2e3e8
+      X-Amz-Request-Id:
+      - 17ED4047152742EB
+      X-Content-Type-Options:
+      - nosniff
+      X-Ratelimit-Limit:
+      - '6215'
+      X-Ratelimit-Remaining:
+      - '6215'
+      X-Xss-Protection:
+      - 1; mode=block
+      Date:
+      - Mon, 19 Aug 2024 22:01:46 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        <?xml version="1.0" encoding="UTF-8"?>
+        <ListAllMyBucketsResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Owner><ID>02d6176db174dc93cb1b899f7c6078f08654445fe8cf1b6ce98d8855f66bdbf4</ID><DisplayName>minio</DisplayName></Owner><Buckets><Bucket><Name>test</Name><CreationDate>2024-08-19T20:16:36.743Z</CreationDate></Bucket></Buckets></ListAllMyBucketsResult>
+  recorded_at: Mon, 19 Aug 2024 22:01:46 GMT
+- request:
+    method: put
+    uri: http://localhost:9000/test/test_file.txt
+    body:
+      encoding: ASCII-8BIT
+      string: File content
+    headers:
+      User-Agent:
+      - S3Light/0.0.1
+      Host:
+      - localhost
+      X-Amz-Date:
+      - 20240819T220146Z
+      X-Amz-Content-Sha256:
+      - UNSIGNED-PAYLOAD
+      Authorization:
+      - AWS4-HMAC-SHA256 Credential=adminadmin/20240819/us-east-1/s3/aws4_request,
+        SignedHeaders=content-length;host;x-amz-content-sha256;x-amz-date, Signature=5e62aae87631ebd4afca93f221ac9df924467403295f21dda5673bb601289f84
+      Content-Length:
+      - '12'
+      - '12'
+      Connection:
+      - Keep-Alive
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Accept-Ranges:
+      - bytes
+      Content-Length:
+      - '0'
+      Etag:
+      - '"8bb2564936980e92ceec8a5759ec34a8"'
+      Server:
+      - MinIO
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      - Origin
+      X-Amz-Id-2:
+      - dd9025bab4ad464b049177c95eb6ebf374d3b3fd1af9251148b658df7ac2e3e8
+      X-Amz-Request-Id:
+      - 17ED40471593A00E
+      X-Content-Type-Options:
+      - nosniff
+      X-Ratelimit-Limit:
+      - '6215'
+      X-Ratelimit-Remaining:
+      - '6215'
+      X-Xss-Protection:
+      - 1; mode=block
+      Date:
+      - Mon, 19 Aug 2024 22:01:46 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+  recorded_at: Mon, 19 Aug 2024 22:01:46 GMT
+recorded_with: VCR 6.3.0

@@ -6,7 +6,7 @@ module S3Light
       super(client, name, persisted)
     end
 
-    def save
+    def save!
       if persisted
         raise 'Bucket already exists'
       end
@@ -26,10 +26,18 @@ module S3Light
         raise 'Bucket does not exist'
       end
 
-      client.connection.make_request(:delete, "/#{name}")
+      __destroy!
 
       self.persisted = false
-      self
+      true
+    end
+
+    def objects
+      @objects ||= S3Light::Client::ObjectsList.new(client, self)
+    end
+
+    def __destroy!
+      self.client.connection.make_request(:delete, "/#{name}")
     end
 
     def persisted?

@@ -6,54 +6,49 @@ module S3Light
       def initialize(body)
         @body = body
         validate_body_type!
+        @size = calculate_size
+        @io = to_io
       end
 
-      def size
-        @size ||=
-          if @body.is_a?(String)
+      attr_reader :size
+
+      def read(length = nil, outbuf = nil)
+        @io.read(length, outbuf)
+      end
+
+      def rewind
+        @io.rewind
+      end
+
+      private
+        def to_io
+          case @body
+          when String
+            StringIO.new(@body)
+          when StringIO, IO
+            @body
+          when Enumerable
+            StringIO.new(@body.to_a.join)
+          when nil
+            StringIO.new('')
+          else
+            raise RequestError, "body of wrong type: #{@body.class}"
+          end
+        end
+
+        def calculate_size
+          case @body
+          when String
             @body.bytesize
-          elsif @body.respond_to?(:size)
+          when StringIO, IO
             @body.size
-          elsif @body.nil?
+          when Enumerable
+            @body.to_a.join.bytesize
+          when nil
             0
           else
             raise RequestError, 'cannot determine size of body'
           end
-      end
-
-      def each(&block)
-        return enum_for(:each) unless block_given?
-
-        if @body.is_a?(String)
-          yield @body
-        elsif @body.respond_to?(:read)
-          yield_io(&block)
-        elsif @body.is_a?(Enumerable)
-          @body.each(&block)
-        end
-      end
-
-      def to_s
-        case @body
-        when String
-          @body
-        when StringIO, IO
-          @body.rewind
-          @body.read.tap { @body.rewind }
-        when Enumerable
-          @body.to_a.join
-        else
-          ''
-        end
-      end
-
-      private
-        def yield_io
-          buffer_size = S3Light.configuration.io_buffer_size
-          while (chunk = @body.read(buffer_size))
-            yield chunk
-          end
-          @body.rewind
         end
 
         def validate_body_type!

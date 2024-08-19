@@ -1,0 +1,115 @@
+---
+http_interactions:
+- request:
+    method: put
+    uri: http://localhost:9000/bucket-1
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+    headers:
+      User-Agent:
+      - S3Light/0.0.1
+      Host:
+      - localhost
+      X-Amz-Date:
+      - 20240819T210753Z
+      X-Amz-Content-Sha256:
+      - UNSIGNED-PAYLOAD
+      Authorization:
+      - AWS4-HMAC-SHA256 Credential=adminadmin/20240819/us-east-1/s3/aws4_request,
+        SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=1bf763679df39ba0e574fef6adb89251d9d633b40d73c100bb7de5d261cc9257
+      Connection:
+      - Keep-Alive
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Accept-Ranges:
+      - bytes
+      Content-Length:
+      - '0'
+      Location:
+      - "/bucket-1"
+      Server:
+      - MinIO
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      - Origin
+      X-Amz-Id-2:
+      - dd9025bab4ad464b049177c95eb6ebf374d3b3fd1af9251148b658df7ac2e3e8
+      X-Amz-Request-Id:
+      - 17ED3D56437285AE
+      X-Content-Type-Options:
+      - nosniff
+      X-Ratelimit-Limit:
+      - '6215'
+      X-Ratelimit-Remaining:
+      - '6215'
+      X-Xss-Protection:
+      - 1; mode=block
+      Date:
+      - Mon, 19 Aug 2024 21:07:53 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+  recorded_at: Mon, 19 Aug 2024 21:07:53 GMT
+- request:
+    method: put
+    uri: http://localhost:9000/bucket-2
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+    headers:
+      User-Agent:
+      - S3Light/0.0.1
+      Host:
+      - localhost
+      X-Amz-Date:
+      - 20240819T210753Z
+      X-Amz-Content-Sha256:
+      - UNSIGNED-PAYLOAD
+      Authorization:
+      - AWS4-HMAC-SHA256 Credential=adminadmin/20240819/us-east-1/s3/aws4_request,
+        SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=492e6a0d23ab0d0507d17715647439ecd9e1ba37424bd964b42adc96c9a53f06
+      Connection:
+      - Keep-Alive
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Accept-Ranges:
+      - bytes
+      Content-Length:
+      - '0'
+      Location:
+      - "/bucket-2"
+      Server:
+      - MinIO
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      - Origin
+      X-Amz-Id-2:
+      - dd9025bab4ad464b049177c95eb6ebf374d3b3fd1af9251148b658df7ac2e3e8
+      X-Amz-Request-Id:
+      - 17ED3D56446486E8
+      X-Content-Type-Options:
+      - nosniff
+      X-Ratelimit-Limit:
+      - '6215'
+      X-Ratelimit-Remaining:
+      - '6215'
+      X-Xss-Protection:
+      - 1; mode=block
+      Date:
+      - Mon, 19 Aug 2024 21:07:53 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+  recorded_at: Mon, 19 Aug 2024 21:07:53 GMT
+recorded_with: VCR 6.3.0

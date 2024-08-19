@@ -28,7 +28,7 @@ module S3Light
       @opened = true
       full_path = URI.join(@endpoint, path).to_s
       request_time = Time.now.utc
-      body = Body.new(body)
+      body = body.is_a?(Body) ? body : Body.new(body)
 
       headers = build_headers(method, full_path, headers, body, request_time)
 
@@ -84,32 +84,16 @@ module S3Light
 
     private
       def stream_request(method, full_path, headers, body)
-        chunks = body.each
-
-        persistent_connection.headers(headers).request(method, full_path, ssl_context: @ssl_context) do |request|
-          if chunked?(headers)
-            request.headers['Transfer-Encoding'] = 'chunked'
-            write_chunked_body(request, chunks)
-          else
-            write_body(request, chunks)
-          end
+        if body.size > 0
+          headers['Content-Length'] = body.size.to_s
         end
-      end
 
-      def write_chunked_body(request, chunks)
-        chunks.each do |chunk|
-          size = chunk.bytesize.to_s(16)
-          request.connection.write("#{size}\r\n")
-          request.connection.write(chunk)
-          request.connection.write("\r\n")
-        end
-        request.connection.write("0\r\n\r\n")
-      end
-
-      def write_body(request, chunks)
-        chunks.each do |chunk|
-          request.connection.write(chunk)
-        end
+        persistent_connection.headers(headers).request(
+          method,
+          full_path,
+          ssl_context: @ssl_context,
+          body: body
+        )
       end
 
       def build_headers(method, path, headers, body, request_time)
