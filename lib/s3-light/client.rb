@@ -23,6 +23,10 @@ module S3Light
       )
     end
 
+    def with_connection(concurrency: 0)
+      yield connection
+    end
+
     private
       def amazon_default_endpoint
         "https://s3.#{@region}.amazonaws.com"

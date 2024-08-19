@@ -8,7 +8,9 @@ module S3Light
       end
 
       def all
-        response = @client.connection.make_request(:get, '/')
+        response = @client.with_connection do |connection|
+          connection.make_request(:get, '/')
+        end
 
         response.xml.remove_namespaces!.xpath('//Bucket').map do |bucket|
           S3Light::Bucket.new(@client, bucket.xpath('Name').text, true)
@@ -16,28 +18,49 @@ module S3Light
       end
 
       def exists?(name:)
-        response = @client.connection.make_request(:head, "/#{name}")
+        response = @client.with_connection do |connection|
+          connection.make_request(:head, "/#{name}")
+        end
 
         response.code == 200
       end
 
       def create_batch(names:, concurrency: 10)
-        names.to_h do |name|
-          [name, new(name: name).save!]
+        result = ConcurrentResult.new
+        names.each do |name|
+          @client.with_connection(concurrency: concurrency) do |connection|
+            bucket = S3Light::Bucket.new(@client, name, true)
+            bucket.__save!(connection)
+            result.add(name, bucket)
+          end
         end
+
+        result.to_h
       end
 
       def destroy_batch(names:, concurrency: 10)
-        names.to_h do |name|
-          S3Light::Bucket.new(@client, name).__destroy!
-          [name, true]
+        result = ConcurrentResult.new
+
+        names.each do |name|
+          @client.with_connection(concurrency: concurrency) do |connection|
+            new(name: name).__destroy!(connection)
+            result.add(name, true)
+          end
         end
+
+        result.to_h
       end
 
       def exists_batch?(names:, concurrency: 10)
-        names.to_h do |name|
-          [name, exists?(name: name)]
+        result = ConcurrentResult.new
+
+        names.each do |name|
+          @client.with_connection(concurrency: concurrency) do |connection|
+            result.add(name, connection.make_request(:head, "/#{name}"))
+          end
         end
+
+        result.to_h
       end
 
       def find_by(name:)

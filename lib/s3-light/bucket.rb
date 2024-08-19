@@ -15,7 +15,9 @@ module S3Light
         raise 'Bucket name is required'
       end
 
-      client.connection.make_request(:put, "/#{name}")
+      self.client.with_connection do |connection|
+        __save!(connection)
+      end
 
       self.persisted = true
       self
@@ -26,7 +28,9 @@ module S3Light
         raise 'Bucket does not exist'
       end
 
-      __destroy!
+      self.client.with_connection do |connection|
+        __destroy!(connection)
+      end
 
       self.persisted = false
       true
@@ -36,8 +40,12 @@ module S3Light
       @objects ||= S3Light::Client::ObjectsList.new(client, self)
     end
 
-    def __destroy!
-      self.client.connection.make_request(:delete, "/#{name}")
+    def __destroy!(connection)
+      connection.make_request(:delete, "/#{name}")
+    end
+
+    def __save!(connection)
+      connection.make_request(:put, "/#{name}")
     end
 
     def persisted?

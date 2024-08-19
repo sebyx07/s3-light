@@ -9,7 +9,9 @@ module S3Light
       end
 
       def all
-        response = @client.connection.make_request(:get, "/#{@bucket.name}")
+        response = @client.with_connection do |connection|
+          connection.make_request(:get, "/#{@bucket.name}")
+        end
 
         response.xml.remove_namespaces!.xpath('//Contents').map do |object|
           S3Light::Object.new(@client, @bucket, object.xpath('Key').text, nil, true)
