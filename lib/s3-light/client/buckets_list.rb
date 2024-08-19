@@ -27,40 +27,57 @@ module S3Light
 
       def create_batch(names:, concurrency: 10)
         result = ConcurrentResult.new
+
+        thread_poll = @client.build_thread_poll(concurrency)
+
         names.each do |name|
-          @client.with_connection(concurrency: concurrency) do |connection|
+          thread_poll.with_connection do |connection|
             bucket = S3Light::Bucket.new(@client, name, true)
             bucket.__save!(connection)
             result.add(name, bucket)
           end
         end
 
+        thread_poll.wait_to_finish
+
         result.to_h
+      ensure
+        thread_poll.close
       end
 
       def destroy_batch(names:, concurrency: 10)
         result = ConcurrentResult.new
+        thread_poll = @client.build_thread_poll(concurrency)
 
         names.each do |name|
-          @client.with_connection(concurrency: concurrency) do |connection|
+          thread_poll.with_connection do |connection|
             new(name: name).__destroy!(connection)
             result.add(name, true)
           end
         end
 
+        thread_poll.wait_to_finish
+
         result.to_h
+      ensure
+        thread_poll.close
       end
 
       def exists_batch?(names:, concurrency: 10)
         result = ConcurrentResult.new
+        thread_poll = @client.build_thread_poll(concurrency)
 
         names.each do |name|
-          @client.with_connection(concurrency: concurrency) do |connection|
+          thread_poll.with_connection do |connection|
             result.add(name, connection.make_request(:head, "/#{name}"))
           end
         end
 
+        thread_poll.wait_to_finish
+
         result.to_h
+      ensure
+        thread_poll.close
       end
 
       def find_by(name:)

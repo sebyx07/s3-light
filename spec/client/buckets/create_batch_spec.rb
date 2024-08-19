@@ -10,7 +10,7 @@ RSpec.describe 'S3Light::Client#buckets.create_batch' do
   end
 
   subject do
-    client.buckets.create_batch(names: %w[bucket-1 bucket-2])
+    client.buckets.create_batch(names: %w[bucket-1 bucket-2], concurrency: 1)
   end
 
   it 'creates a batch of new buckets', vcr: { cassette_name: 's3_client/create_batch' } do
