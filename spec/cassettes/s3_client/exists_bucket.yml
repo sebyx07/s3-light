@@ -1,0 +1,59 @@
+---
+http_interactions:
+- request:
+    method: head
+    uri: http://localhost:9000/test
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+    headers:
+      User-Agent:
+      - S3Light/0.0.1
+      Host:
+      - localhost
+      X-Amz-Date:
+      - 20240819T210330Z
+      X-Amz-Content-Sha256:
+      - UNSIGNED-PAYLOAD
+      Authorization:
+      - AWS4-HMAC-SHA256 Credential=adminadmin/20240819/us-east-1/s3/aws4_request,
+        SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=da3d43ab1ded9647887313df17d0017c11738ae56422df04fd56c2307dabe71e
+      Connection:
+      - Keep-Alive
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Accept-Ranges:
+      - bytes
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/xml
+      Server:
+      - MinIO
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      - Origin
+      X-Amz-Id-2:
+      - dd9025bab4ad464b049177c95eb6ebf374d3b3fd1af9251148b658df7ac2e3e8
+      X-Amz-Request-Id:
+      - 17ED3D192ABDC6D6
+      X-Content-Type-Options:
+      - nosniff
+      X-Ratelimit-Limit:
+      - '6215'
+      X-Ratelimit-Remaining:
+      - '6215'
+      X-Xss-Protection:
+      - 1; mode=block
+      Date:
+      - Mon, 19 Aug 2024 21:03:30 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+  recorded_at: Mon, 19 Aug 2024 21:03:30 GMT
+recorded_with: VCR 6.3.0

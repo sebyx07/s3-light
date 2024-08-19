@@ -11,7 +11,7 @@ module S3Light
     end
 
     def buckets
-      @buckets ||= Buckets.new(self)
+      @buckets ||= BucketsList.new(self)
     end
 
     def connection

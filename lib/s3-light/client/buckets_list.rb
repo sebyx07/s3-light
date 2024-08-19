@@ -2,7 +2,7 @@
 
 module S3Light
   class Client
-    class Buckets
+    class BucketsList
       def initialize(client)
         @client = client
       end
@@ -15,8 +15,22 @@ module S3Light
         end
       end
 
+      def exists?(name:)
+        response = @client.connection.make_request(:head, "/#{name}")
+
+        response.code == 200
+      end
+
+      def find_by(name:)
+        all.find { |bucket| bucket.name == name }
+      end
+
+      def new(name: nil)
+        S3Light::Bucket.new(@client, name, false)
+      end
+
       def inspect
-        "#<#{self.class.name}>:#{object_id}\n#{all.map(&:inspect).join("\n")}"
+        "#<#{self.class.name} @buckets=#{all.size}>"
       end
     end
   end

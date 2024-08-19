@@ -73,7 +73,7 @@ module S3Light
     end
 
     def inspect
-      "#<#{self.class.name}:#{object_id} @endpoint=#{@endpoint} @opened=#{@opened}>"
+      "#<#{self.class.name} @endpoint=#{@endpoint} @opened=#{@opened}>"
     end
 
     def self.close_connection(connection)

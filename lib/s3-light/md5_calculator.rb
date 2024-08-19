@@ -21,7 +21,7 @@ module S3Light
     end
 
     def inspect
-      "#<#{self.class.name}:#{object_id}>"
+      "#<#{self.class.name}>"
     end
 
     private
