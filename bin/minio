@@ -1,0 +1,38 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+require 'open-uri'
+
+# Set MinIO configuration
+minio_url = 'https://dl.min.io/server/minio/release/linux-amd64/minio'
+minio_path = './tmp/minio'
+data_dir = Dir.pwd + '/tmp/minio-data'
+username = 'adminadmin'
+password = 'adminadmin'
+
+# Download MinIO if it doesn't exist
+unless File.exist?(minio_path)
+  puts "Downloading MinIO..."
+  URI.open(minio_url) do |remote_file|
+    File.open(minio_path, 'wb') do |local_file|
+      local_file.write(remote_file.read)
+    end
+  end
+  puts "MinIO downloaded successfully."
+else
+  puts "MinIO binary already exists. Skipping download."
+end
+
+# Make MinIO executable
+File.chmod(0755, minio_path)
+
+# Ensure the data directory exists
+FileUtils.mkdir_p(data_dir)
+
+# Set environment variables for MinIO
+ENV['MINIO_ROOT_USER'] = username
+ENV['MINIO_ROOT_PASSWORD'] = password
+
+# Start MinIO
+puts "Starting MinIO..."
+exec(minio_path, 'server', data_dir, '--console-address', ':9001')
