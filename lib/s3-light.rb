@@ -6,6 +6,8 @@ require 'stringio'
 require 'digest'
 require 'base64'
 require 'time'
+require 'openssl/hmac'
+require 'nokogiri'
 
 Dir.glob(File.join(File.dirname(__FILE__), 's3-light', '**', '*.rb')).each do |file|
   require file

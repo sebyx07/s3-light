@@ -4,20 +4,24 @@ module S3Light
   class Connection
     attr_reader :endpoint
 
-    def initialize(endpoint:, access_key_id:, secret_access_key:, port:, ssl_context:)
+    def initialize(endpoint:, access_key_id:, secret_access_key:, ssl_context:)
       @endpoint = URI(endpoint)
       @access_key_id = access_key_id
       @secret_access_key = secret_access_key
-      @port = port
       @ssl_context = ssl_context
       @opened = false
     end
 
     def persistent_connection
-      @persistent_connection ||= HTTP.persistent(@endpoint).headers(
+      return @persistent_connection if @persistent_connection
+
+      @persistent_connection = HTTP.persistent(@endpoint).headers(
         'User-Agent' => "S3Light/#{S3Light::VERSION}",
         'Host' => @endpoint.host
       )
+      ObjectSpace.define_finalizer(self, self.class.close_connection(@persistent_connection))
+
+      @persistent_connection
     end
 
     def make_request(method, path, headers: {}, body: nil)
@@ -72,6 +76,12 @@ module S3Light
       "#<#{self.class.name}:#{object_id} @endpoint=#{@endpoint} @opened=#{@opened}>"
     end
 
+    def self.close_connection(connection)
+      proc do
+        connection.close
+      end
+    end
+
     private
       def stream_request(method, full_path, headers, body)
         chunks = body.each
@@ -106,18 +116,10 @@ module S3Light
         canonical_headers = {
           'host' => @endpoint.host,
           'x-amz-date' => request_time.strftime('%Y%m%dT%H%M%SZ'),
-          'x-amz-content-sha256' => body.size == 0 ? Digest::SHA256.hexdigest('') : 'STREAMING-AWS4-HMAC-SHA256-PAYLOAD'
+          'x-amz-content-sha256' => 'UNSIGNED-PAYLOAD'
         }
 
-        unless chunked?(headers)
-          canonical_headers['content-length'] = body.size.to_s
-        end
-
-        # Calculate and add Content-MD5 header
-        if body.size > 0 && !chunked?(headers)
-          md5_calculator = Md5Calculator.new(body.to_s)
-          canonical_headers['content-md5'] = Base64.strict_encode64([md5_calculator.md5].pack('H*'))
-        end
+        canonical_headers['content-length'] = body.size.to_s if body.size > 0
 
         signed_headers = canonical_headers.keys.sort.join(';')
 
@@ -149,14 +151,14 @@ module S3Light
       end
 
       def string_to_sign(method, path, canonical_headers, signed_headers, body, request_time)
+        uri = URI(path)
         canonical_request = [
           method.to_s.upcase,
-          path,
-          '', # Query string
-          canonical_headers.map { |k, v| "#{k}:#{v}" }.join("\n"),
-          '',
+          uri.path,
+          uri.query || '',
+          canonical_headers.sort.map { |k, v| "#{k}:#{v.strip}" }.join("\n") + "\n",
           signed_headers,
-          body.size == 0 ? Digest::SHA256.hexdigest('') : 'STREAMING-AWS4-HMAC-SHA256-PAYLOAD'
+          'UNSIGNED-PAYLOAD'
         ].join("\n")
 
         [
@@ -187,7 +189,7 @@ module S3Light
       def handle_response(response)
         case response.code
         when 200..299
-          response
+          Connection::Response.new(response)
         else
           raise "HTTP Error: #{response.code} - #{response.body}"
         end
