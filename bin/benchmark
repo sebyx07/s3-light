@@ -1,0 +1,168 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+require_relative '../lib/s3-light'
+require "aws-sdk-s3"
+require "benchmark"
+
+ACCESS_KEY_ID = 'adminadmin'
+SECRET_ACCESS_KEY = 'adminadmin'
+ENDPOINT = 'http://localhost:9000'
+BUCKET_NAME = 'test'
+FILE_SIZE = 50 * 1024 * 1024 # 50MB
+NUM_FILES = 50
+CONCURRENCY = 10
+LARGE_FILE_PATH = './tmp/large_file.bin'
+
+# Create a 50MB file
+File.open(LARGE_FILE_PATH, 'wb') do |f|
+  f.write(SecureRandom.random_bytes(FILE_SIZE))
+end
+
+# Initialize S3::Light client
+s3_light_client = S3Light::Client.new(
+  access_key_id: ACCESS_KEY_ID,
+  secret_access_key: SECRET_ACCESS_KEY,
+  endpoint: ENDPOINT
+)
+
+s3_light_bucket = s3_light_client.buckets.find_by(name: BUCKET_NAME)
+
+# Initialize AWS SDK S3 client
+aws_s3_client = Aws::S3::Client.new(
+  access_key_id: ACCESS_KEY_ID,
+  secret_access_key: SECRET_ACCESS_KEY,
+  endpoint: ENDPOINT,
+  force_path_style: true,
+  region: 'us-east-1'
+)
+
+# Benchmark individual upload
+puts "Benchmarking individual upload of #{NUM_FILES} files (#{FILE_SIZE / 1024 / 1024}MB each):"
+Benchmark.bm(20) do |x|
+  x.report("S3::Light:") do
+    NUM_FILES.times do |i|
+      s3_light_bucket.objects.new(
+        key: "s3_light_file_#{i}.bin",
+        input: File.open(LARGE_FILE_PATH, 'rb')
+      ).save!
+    end
+  end
+
+  x.report("Amazon S3 Gem:") do
+    NUM_FILES.times do |i|
+      aws_s3_client.put_object(
+        bucket: BUCKET_NAME,
+        key: "aws_s3_file_#{i}.bin",
+        body: File.open(LARGE_FILE_PATH, 'rb')
+      )
+    end
+  end
+end
+
+# Benchmark individual download
+puts "\nBenchmarking individual download of #{NUM_FILES} files:"
+Benchmark.bm(20) do |x|
+  x.report("S3::Light:") do
+    NUM_FILES.times do |i|
+      s3_light_bucket.objects.find_by(key: "s3_light_file_#{i}.bin").download(to: "/tmp/s3_light_#{i}.bin")
+    end
+  end
+
+  x.report("Amazon S3 Gem:") do
+    NUM_FILES.times do |i|
+      aws_s3_client.get_object(
+        bucket: BUCKET_NAME,
+        key: "aws_s3_file_#{i}.bin",
+        response_target: "/tmp/aws_s3_#{i}.bin"
+      )
+    end
+  end
+end
+
+# Benchmark batch upload
+puts "\nBenchmarking batch upload of #{NUM_FILES} files:"
+Benchmark.bm(20) do |x|
+  x.report("S3::Light:") do
+    input = {}
+    NUM_FILES.times do |i|
+      input["s3_light_batch_file_#{i}.bin"] = File.open(LARGE_FILE_PATH, 'rb')
+    end
+    s3_light_bucket.objects.create_batch(input: input, concurrency: CONCURRENCY)
+  end
+
+  x.report("Amazon S3 Gem:") do
+    threads = []
+    NUM_FILES.times do |i|
+      threads << Thread.new do
+        aws_s3_client.put_object(
+          bucket: BUCKET_NAME,
+          key: "aws_s3_batch_file_#{i}.bin",
+          body: File.open(LARGE_FILE_PATH, 'rb')
+        )
+      end
+      if threads.size >= CONCURRENCY
+        threads.each(&:join)
+        threads.clear
+      end
+    end
+    threads.each(&:join)
+  end
+end
+
+# Benchmark batch download
+puts "\nBenchmarking batch download of #{NUM_FILES} files (concurrency: #{CONCURRENCY}):"
+Benchmark.bm(20) do |x|
+  x.report("S3::Light:") do
+    keys = NUM_FILES.times.map { |i| "s3_light_batch_file_#{i}.bin" }
+    s3_light_bucket.objects.download_batch(keys: keys, to: '/tmp', concurrency: CONCURRENCY)
+  end
+
+  x.report("Amazon S3 Gem:") do
+    threads = []
+    NUM_FILES.times do |i|
+      threads << Thread.new do
+        aws_s3_client.get_object(
+          bucket: BUCKET_NAME,
+          key: "aws_s3_batch_file_#{i}.bin",
+          response_target: "/tmp/aws_s3_batch_#{i}.bin"
+        )
+      end
+      if threads.size >= CONCURRENCY
+        threads.each(&:join)
+        threads.clear
+      end
+    end
+    threads.each(&:join)
+  end
+end
+
+# Clean up
+puts "\nCleaning up..."
+
+# Cleanup for S3::Light
+%w[file batch_file].each do |prefix|
+  NUM_FILES.times do |i|
+    begin
+      s3_light_bucket.objects.find_by(key: "s3_light_#{prefix}_#{i}.bin").destroy!
+    rescue S3Light::Error => e
+      puts "Error deleting S3::Light object: #{e.message}"
+    end
+  end
+end
+
+# Cleanup for Amazon S3 Gem
+%w[file batch_file].each do |prefix|
+  NUM_FILES.times do |i|
+    begin
+      aws_s3_client.delete_object(bucket: BUCKET_NAME, key: "aws_s3_#{prefix}_#{i}.bin")
+    rescue Aws::S3::Errors::ServiceError => e
+      puts "Error deleting AWS S3 object: #{e.message}"
+    end
+  end
+end
+
+# Delete local files
+Dir.glob('/tmp/{s3_light,aws_s3}*').each { |f| File.delete(f) }
+File.delete(LARGE_FILE_PATH)
+
+puts "Benchmark completed. All temporary files and objects have been cleaned up."
