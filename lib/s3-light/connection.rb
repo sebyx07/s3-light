@@ -2,6 +2,18 @@
 
 module S3Light
   class Connection
+    class HttpError < StandardError
+      attr_reader :response
+
+      def initialize(response)
+        @response = response
+        super("HTTP Error: #{response.code} - #{response.body}")
+      end
+
+      def code
+        @response.code
+      end
+    end
     attr_reader :endpoint
 
     def initialize(endpoint:, access_key_id:, secret_access_key:, ssl_context:)
@@ -37,30 +49,23 @@ module S3Light
       handle_response(response)
     end
 
-    def download_file(path, output_path: nil)
+    def download_file(path, output_path)
       @opened = true
       full_path = URI.join(@endpoint, path).to_s
       request_time = Time.now.utc
 
       headers = build_headers('GET', full_path, {}, Body.new(nil), request_time)
 
-      tempfile = Tempfile.new('s3light-download')
+      File.open(output_path, 'wb') do |file|
+        response = persistent_connection.headers(headers).get(full_path, ssl_context: @ssl_context)
+        raise HttpError.new(response) if response.code > 399
 
-      persistent_connection.headers(headers).get(full_path, ssl_context: @ssl_context) do |res|
-        res.body.each do |chunk|
-          tempfile.write(chunk)
+        response.body.each do |chunk|
+          file.write(chunk)
         end
       end
 
-      if output_path
-        FileUtils.mv(tempfile.path, output_path)
-        File.open(output_path, 'rb')
-      else
-        tempfile.rewind
-        tempfile
-      end
-    ensure
-      tempfile.close unless output_path
+      output_path
     end
 
     def close
@@ -175,7 +180,7 @@ module S3Light
         when 200..299
           Connection::Response.new(response)
         else
-          raise "HTTP Error: #{response.code} - #{response.body}"
+          raise HttpError.new(response)
         end
       end
 

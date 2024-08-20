@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://localhost:9000/
+    uri: http://localhost:9000/test
     body:
       encoding: ASCII-8BIT
       string: ''
@@ -12,12 +12,12 @@ http_interactions:
       Host:
       - localhost
       X-Amz-Date:
-      - 20240819T220146Z
+      - 20240819T235459Z
       X-Amz-Content-Sha256:
       - UNSIGNED-PAYLOAD
       Authorization:
       - AWS4-HMAC-SHA256 Credential=adminadmin/20240819/us-east-1/s3/aws4_request,
-        SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=76a8c319021023bdd941cd5ecd73279a32465d68c3dc12f370b91132f4229c8d
+        SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=78837e3c227f1ec64bf897a1abbda76c26aca6572567b131f8d93f67d5afdbaa
       Connection:
       - Keep-Alive
   response:
@@ -28,7 +28,7 @@ http_interactions:
       Accept-Ranges:
       - bytes
       Content-Length:
-      - '362'
+      - '1531'
       Content-Type:
       - application/xml
       Server:
@@ -41,7 +41,7 @@ http_interactions:
       X-Amz-Id-2:
       - dd9025bab4ad464b049177c95eb6ebf374d3b3fd1af9251148b658df7ac2e3e8
       X-Amz-Request-Id:
-      - 17ED4047152742EB
+      - 17ED4674A57F755C
       X-Content-Type-Options:
       - nosniff
       X-Ratelimit-Limit:
@@ -51,13 +51,13 @@ http_interactions:
       X-Xss-Protection:
       - 1; mode=block
       Date:
-      - Mon, 19 Aug 2024 22:01:46 GMT
+      - Mon, 19 Aug 2024 23:54:59 GMT
     body:
       encoding: ASCII-8BIT
       string: |-
         <?xml version="1.0" encoding="UTF-8"?>
-        <ListAllMyBucketsResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Owner><ID>02d6176db174dc93cb1b899f7c6078f08654445fe8cf1b6ce98d8855f66bdbf4</ID><DisplayName>minio</DisplayName></Owner><Buckets><Bucket><Name>test</Name><CreationDate>2024-08-19T20:16:36.743Z</CreationDate></Bucket></Buckets></ListAllMyBucketsResult>
-  recorded_at: Mon, 19 Aug 2024 22:01:46 GMT
+        <ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Name>test</Name><Prefix></Prefix><Marker></Marker><MaxKeys>1000</MaxKeys><IsTruncated>false</IsTruncated><Contents><Key>large_file.txt</Key><LastModified>2024-08-19T22:01:46.508Z</LastModified><ETag>&#34;5b77099fb249bf5b8f10a16999ccd51f&#34;</ETag><Size>10000000</Size><Owner><ID>02d6176db174dc93cb1b899f7c6078f08654445fe8cf1b6ce98d8855f66bdbf4</ID><DisplayName>minio</DisplayName></Owner><StorageClass>STANDARD</StorageClass></Contents><Contents><Key>stringio.txt</Key><LastModified>2024-08-19T22:01:46.418Z</LastModified><ETag>&#34;27b7883d2ed8173e7f443162d70df33a&#34;</ETag><Size>16</Size><Owner><ID>02d6176db174dc93cb1b899f7c6078f08654445fe8cf1b6ce98d8855f66bdbf4</ID><DisplayName>minio</DisplayName></Owner><StorageClass>STANDARD</StorageClass></Contents><Contents><Key>test.txt</Key><LastModified>2024-08-19T23:54:59.139Z</LastModified><ETag>&#34;65a8e27d8879283831b664bd8b7f0ad4&#34;</ETag><Size>13</Size><Owner><ID>02d6176db174dc93cb1b899f7c6078f08654445fe8cf1b6ce98d8855f66bdbf4</ID><DisplayName>minio</DisplayName></Owner><StorageClass>STANDARD</StorageClass></Contents><Contents><Key>test_file.txt</Key><LastModified>2024-08-19T22:01:46.401Z</LastModified><ETag>&#34;8bb2564936980e92ceec8a5759ec34a8&#34;</ETag><Size>12</Size><Owner><ID>02d6176db174dc93cb1b899f7c6078f08654445fe8cf1b6ce98d8855f66bdbf4</ID><DisplayName>minio</DisplayName></Owner><StorageClass>STANDARD</StorageClass></Contents></ListBucketResult>
+  recorded_at: Mon, 19 Aug 2024 23:54:59 GMT
 - request:
     method: put
     uri: http://localhost:9000/test/test_file.txt
@@ -70,12 +70,12 @@ http_interactions:
       Host:
       - localhost
       X-Amz-Date:
-      - 20240819T220146Z
+      - 20240819T235459Z
       X-Amz-Content-Sha256:
       - UNSIGNED-PAYLOAD
       Authorization:
       - AWS4-HMAC-SHA256 Credential=adminadmin/20240819/us-east-1/s3/aws4_request,
-        SignedHeaders=content-length;host;x-amz-content-sha256;x-amz-date, Signature=5e62aae87631ebd4afca93f221ac9df924467403295f21dda5673bb601289f84
+        SignedHeaders=content-length;host;x-amz-content-sha256;x-amz-date, Signature=18a30817398365e1a6479e87cfd055c6dfc2d3257b48d44aaa4fc5883072f026
       Content-Length:
       - '12'
       - '12'
@@ -102,7 +102,7 @@ http_interactions:
       X-Amz-Id-2:
       - dd9025bab4ad464b049177c95eb6ebf374d3b3fd1af9251148b658df7ac2e3e8
       X-Amz-Request-Id:
-      - 17ED40471593A00E
+      - 17ED4674A6253456
       X-Content-Type-Options:
       - nosniff
       X-Ratelimit-Limit:
@@ -112,9 +112,9 @@ http_interactions:
       X-Xss-Protection:
       - 1; mode=block
       Date:
-      - Mon, 19 Aug 2024 22:01:46 GMT
+      - Mon, 19 Aug 2024 23:54:59 GMT
     body:
       encoding: ASCII-8BIT
       string: ''
-  recorded_at: Mon, 19 Aug 2024 22:01:46 GMT
+  recorded_at: Mon, 19 Aug 2024 23:54:59 GMT
 recorded_with: VCR 6.3.0

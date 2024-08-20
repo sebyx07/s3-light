@@ -8,11 +8,11 @@ module S3Light
 
     def save!
       if persisted
-        raise 'Bucket already exists'
+        raise S3Light::Error, 'Bucket already exists'
       end
 
       if name.nil? || name.empty?
-        raise 'Bucket name is required'
+        raise S3Light::Error, 'Bucket name is required'
       end
 
       self.client.with_connection do |connection|
@@ -23,9 +23,9 @@ module S3Light
       self
     end
 
-    def destroy
+    def destroy!
       unless persisted
-        raise 'Bucket does not exist'
+        raise S3Light::Error, 'Bucket does not exist'
       end
 
       self.client.with_connection do |connection|

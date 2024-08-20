@@ -15,6 +15,7 @@ Dir.glob(File.join(File.dirname(__FILE__), 's3-light', '**', '*.rb')).each do |f
 end
 
 module S3Light
+  class Error < StandardError; end
   class << self
     def self.configure
       yield(configuration)

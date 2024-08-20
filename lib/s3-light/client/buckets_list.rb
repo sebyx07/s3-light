@@ -81,7 +81,16 @@ module S3Light
       end
 
       def find_by(name:)
-        all.find { |bucket| bucket.name == name }
+        @client.with_connection do |connection|
+          connection.make_request(:get, "/#{name}")
+        end
+
+        S3Light::Bucket.new(@client, name, true)
+
+      rescue S3Light::Connection::HttpError => e
+        return nil if e.code == 404
+
+        raise e
       end
 
       def new(name: nil)

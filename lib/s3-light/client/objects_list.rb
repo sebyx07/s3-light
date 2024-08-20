@@ -18,7 +18,32 @@ module S3Light
         end
       end
 
-      def new(key:, input:)
+      def find_by(key:)
+        @client.with_connection do |connection|
+          connection.make_request(:head, "/#{@bucket.name}/#{key}")
+        end
+
+        S3Light::Object.new(@client, @bucket, key, nil, true)
+
+      rescue S3Light::Connection::HttpError => e
+        return nil if e.code == 404
+
+        raise e
+      end
+
+      def exists?(key:)
+        @client.with_connection do |connection|
+          connection.make_request(:head, "/#{@bucket.name}/#{key}")
+        end
+
+        true
+      rescue S3Light::Connection::HttpError => e
+        return false if e.code == 404
+
+        raise e
+      end
+
+      def new(key:, input: nil)
         S3Light::Object.new(@client, @bucket, key, input, false)
       end
     end

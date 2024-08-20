@@ -12,12 +12,12 @@ http_interactions:
       Host:
       - localhost
       X-Amz-Date:
-      - 20240819T211204Z
+      - 20240819T235420Z
       X-Amz-Content-Sha256:
       - UNSIGNED-PAYLOAD
       Authorization:
       - AWS4-HMAC-SHA256 Credential=adminadmin/20240819/us-east-1/s3/aws4_request,
-        SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=6b09037c6a599ad773bc6a6841498978978fcb44a28dc6898998fb6719fa7ce7
+        SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=f62e153b35f1e63921f4fdaa2504fe0d71e7585aca94dd492915b2124ff912b7
       Connection:
       - Keep-Alive
   response:
@@ -41,7 +41,7 @@ http_interactions:
       X-Amz-Id-2:
       - dd9025bab4ad464b049177c95eb6ebf374d3b3fd1af9251148b658df7ac2e3e8
       X-Amz-Request-Id:
-      - 17ED3D90E3549041
+      - 17ED466BB8EC4004
       X-Content-Type-Options:
       - nosniff
       X-Ratelimit-Limit:
@@ -51,11 +51,11 @@ http_interactions:
       X-Xss-Protection:
       - 1; mode=block
       Date:
-      - Mon, 19 Aug 2024 21:12:04 GMT
+      - Mon, 19 Aug 2024 23:54:20 GMT
     body:
       encoding: ASCII-8BIT
       string: ''
-  recorded_at: Mon, 19 Aug 2024 21:12:04 GMT
+  recorded_at: Mon, 19 Aug 2024 23:54:20 GMT
 - request:
     method: head
     uri: http://localhost:9000/bucket-2
@@ -68,12 +68,12 @@ http_interactions:
       Host:
       - localhost
       X-Amz-Date:
-      - 20240819T211204Z
+      - 20240819T235420Z
       X-Amz-Content-Sha256:
       - UNSIGNED-PAYLOAD
       Authorization:
       - AWS4-HMAC-SHA256 Credential=adminadmin/20240819/us-east-1/s3/aws4_request,
-        SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=edb3153e39f69003492702a4791648c000d5a0726dfb69b7d2fd2a78bad08b6f
+        SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=94245eca5e50453b2f6658e5064bdf0c2733cdb9929ef6e05b4ed80711665bb3
       Connection:
       - Keep-Alive
   response:
@@ -97,19 +97,19 @@ http_interactions:
       X-Amz-Id-2:
       - dd9025bab4ad464b049177c95eb6ebf374d3b3fd1af9251148b658df7ac2e3e8
       X-Amz-Request-Id:
-      - 17ED3D90E3853473
+      - 17ED466BB8EE9236
       X-Content-Type-Options:
       - nosniff
       X-Ratelimit-Limit:
       - '6215'
       X-Ratelimit-Remaining:
-      - '6215'
+      - '6214'
       X-Xss-Protection:
       - 1; mode=block
       Date:
-      - Mon, 19 Aug 2024 21:12:04 GMT
+      - Mon, 19 Aug 2024 23:54:20 GMT
     body:
       encoding: ASCII-8BIT
       string: ''
-  recorded_at: Mon, 19 Aug 2024 21:12:04 GMT
+  recorded_at: Mon, 19 Aug 2024 23:54:20 GMT
 recorded_with: VCR 6.3.0

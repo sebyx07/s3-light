@@ -12,12 +12,12 @@ http_interactions:
       Host:
       - localhost
       X-Amz-Date:
-      - 20240819T202110Z
+      - 20240819T235420Z
       X-Amz-Content-Sha256:
       - UNSIGNED-PAYLOAD
       Authorization:
       - AWS4-HMAC-SHA256 Credential=adminadmin/20240819/us-east-1/s3/aws4_request,
-        SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=c88df347aaaf5bab702016b1655c9ba098cab758736ce994ed42a04307f2595f
+        SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=281c998c889f7827bec8fd5ecc1c2498ac2d3b444acd1d0f3c3de2989ee4d501
       Connection:
       - Keep-Alive
   response:
@@ -41,7 +41,7 @@ http_interactions:
       X-Amz-Id-2:
       - dd9025bab4ad464b049177c95eb6ebf374d3b3fd1af9251148b658df7ac2e3e8
       X-Amz-Request-Id:
-      - 17ED3AC9AAC2A147
+      - 17ED466BB3C2F29A
       X-Content-Type-Options:
       - nosniff
       X-Ratelimit-Limit:
@@ -51,11 +51,11 @@ http_interactions:
       X-Xss-Protection:
       - 1; mode=block
       Date:
-      - Mon, 19 Aug 2024 20:21:10 GMT
+      - Mon, 19 Aug 2024 23:54:20 GMT
     body:
       encoding: ASCII-8BIT
       string: |-
         <?xml version="1.0" encoding="UTF-8"?>
         <ListAllMyBucketsResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Owner><ID>02d6176db174dc93cb1b899f7c6078f08654445fe8cf1b6ce98d8855f66bdbf4</ID><DisplayName>minio</DisplayName></Owner><Buckets><Bucket><Name>test</Name><CreationDate>2024-08-19T20:16:36.743Z</CreationDate></Bucket></Buckets></ListAllMyBucketsResult>
-  recorded_at: Mon, 19 Aug 2024 20:21:10 GMT
+  recorded_at: Mon, 19 Aug 2024 23:54:20 GMT
 recorded_with: VCR 6.3.0
