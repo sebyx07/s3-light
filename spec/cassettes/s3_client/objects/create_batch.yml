@@ -1,0 +1,179 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://localhost:9000/test
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+    headers:
+      User-Agent:
+      - S3Light/0.0.1
+      Host:
+      - localhost
+      X-Amz-Date:
+      - 20240820T011922Z
+      X-Amz-Content-Sha256:
+      - UNSIGNED-PAYLOAD
+      Authorization:
+      - AWS4-HMAC-SHA256 Credential=adminadmin/20240820/us-east-1/s3/aws4_request,
+        SignedHeaders=host;x-amz-content-sha256;x-amz-date, Signature=c960816aa756b3df92f3b7a9c6be1e9bcaf419bc6f80c6752447162ca41dcb31
+      Connection:
+      - Keep-Alive
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Accept-Ranges:
+      - bytes
+      Content-Length:
+      - '1211'
+      Content-Type:
+      - application/xml
+      Server:
+      - MinIO
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      - Origin
+      X-Amz-Id-2:
+      - dd9025bab4ad464b049177c95eb6ebf374d3b3fd1af9251148b658df7ac2e3e8
+      X-Amz-Request-Id:
+      - 17ED4B0F8608B139
+      X-Content-Type-Options:
+      - nosniff
+      X-Ratelimit-Limit:
+      - '6215'
+      X-Ratelimit-Remaining:
+      - '6215'
+      X-Xss-Protection:
+      - 1; mode=block
+      Date:
+      - Tue, 20 Aug 2024 01:19:22 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        <?xml version="1.0" encoding="UTF-8"?>
+        <ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/"><Name>test</Name><Prefix></Prefix><Marker></Marker><MaxKeys>1000</MaxKeys><IsTruncated>false</IsTruncated><Contents><Key>large_file.txt</Key><LastModified>2024-08-19T23:54:59.287Z</LastModified><ETag>&#34;5b77099fb249bf5b8f10a16999ccd51f&#34;</ETag><Size>10000000</Size><Owner><ID>02d6176db174dc93cb1b899f7c6078f08654445fe8cf1b6ce98d8855f66bdbf4</ID><DisplayName>minio</DisplayName></Owner><StorageClass>STANDARD</StorageClass></Contents><Contents><Key>stringio.txt</Key><LastModified>2024-08-19T23:54:59.182Z</LastModified><ETag>&#34;27b7883d2ed8173e7f443162d70df33a&#34;</ETag><Size>16</Size><Owner><ID>02d6176db174dc93cb1b899f7c6078f08654445fe8cf1b6ce98d8855f66bdbf4</ID><DisplayName>minio</DisplayName></Owner><StorageClass>STANDARD</StorageClass></Contents><Contents><Key>test_file.txt</Key><LastModified>2024-08-20T01:07:24.202Z</LastModified><ETag>&#34;bd872139a93d311e1d2919104c627d35&#34;</ETag><Size>23</Size><Owner><ID>02d6176db174dc93cb1b899f7c6078f08654445fe8cf1b6ce98d8855f66bdbf4</ID><DisplayName>minio</DisplayName></Owner><StorageClass>STANDARD</StorageClass></Contents></ListBucketResult>
+  recorded_at: Tue, 20 Aug 2024 01:19:22 GMT
+- request:
+    method: put
+    uri: http://localhost:9000/test/item-2
+    body:
+      encoding: ASCII-8BIT
+      string: content-2
+    headers:
+      User-Agent:
+      - S3Light/0.0.1
+      Host:
+      - localhost
+      X-Amz-Date:
+      - 20240820T011922Z
+      X-Amz-Content-Sha256:
+      - UNSIGNED-PAYLOAD
+      Authorization:
+      - AWS4-HMAC-SHA256 Credential=adminadmin/20240820/us-east-1/s3/aws4_request,
+        SignedHeaders=content-length;host;x-amz-content-sha256;x-amz-date, Signature=4952a0aa42f14c28cfae35f58a3ed58618e01412c387cd8dfb077838ad9afe36
+      Content-Length:
+      - '9'
+      - '9'
+      Connection:
+      - Keep-Alive
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Accept-Ranges:
+      - bytes
+      Content-Length:
+      - '0'
+      Etag:
+      - '"610bd1fcc43e89895ec87162b65226c3"'
+      Server:
+      - MinIO
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      - Origin
+      X-Amz-Id-2:
+      - dd9025bab4ad464b049177c95eb6ebf374d3b3fd1af9251148b658df7ac2e3e8
+      X-Amz-Request-Id:
+      - 17ED4B0F86D5E231
+      X-Content-Type-Options:
+      - nosniff
+      X-Ratelimit-Limit:
+      - '6215'
+      X-Ratelimit-Remaining:
+      - '6214'
+      X-Xss-Protection:
+      - 1; mode=block
+      Date:
+      - Tue, 20 Aug 2024 01:19:22 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+  recorded_at: Tue, 20 Aug 2024 01:19:22 GMT
+- request:
+    method: put
+    uri: http://localhost:9000/test/item-1
+    body:
+      encoding: ASCII-8BIT
+      string: content-1
+    headers:
+      User-Agent:
+      - S3Light/0.0.1
+      Host:
+      - localhost
+      X-Amz-Date:
+      - 20240820T011922Z
+      X-Amz-Content-Sha256:
+      - UNSIGNED-PAYLOAD
+      Authorization:
+      - AWS4-HMAC-SHA256 Credential=adminadmin/20240820/us-east-1/s3/aws4_request,
+        SignedHeaders=content-length;host;x-amz-content-sha256;x-amz-date, Signature=4cc4f0e4747dc02c20cb36d36f3e66e38991072c9feab58f9fb1b997a6755347
+      Content-Length:
+      - '9'
+      - '9'
+      Connection:
+      - Keep-Alive
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Accept-Ranges:
+      - bytes
+      Content-Length:
+      - '0'
+      Etag:
+      - '"928cae62314b95527918ee4a2447da01"'
+      Server:
+      - MinIO
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains
+      Vary:
+      - Accept-Encoding
+      - Origin
+      X-Amz-Id-2:
+      - dd9025bab4ad464b049177c95eb6ebf374d3b3fd1af9251148b658df7ac2e3e8
+      X-Amz-Request-Id:
+      - 17ED4B0F86D3AA75
+      X-Content-Type-Options:
+      - nosniff
+      X-Ratelimit-Limit:
+      - '6215'
+      X-Ratelimit-Remaining:
+      - '6215'
+      X-Xss-Protection:
+      - 1; mode=block
+      Date:
+      - Tue, 20 Aug 2024 01:19:22 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+  recorded_at: Tue, 20 Aug 2024 01:19:22 GMT
+recorded_with: VCR 6.3.0

@@ -30,6 +30,8 @@ module S3Light
 
       self.client.with_connection do |connection|
         __destroy!(connection)
+      rescue S3Light::Connection::HttpError => e
+        raise e unless e.code == 404
       end
 
       self.persisted = false

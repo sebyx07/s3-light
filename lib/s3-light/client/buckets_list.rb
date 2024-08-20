@@ -29,12 +29,16 @@ module S3Light
         result = ConcurrentResult.new
 
         thread_poll = @client.build_thread_poll(concurrency)
+        current_thread = Thread.current
 
         names.each do |name|
           thread_poll.with_connection do |connection|
             bucket = S3Light::Bucket.new(@client, name, true)
             bucket.__save!(connection)
             result.add(name, bucket)
+          rescue Exception => e
+            thread_poll.kill
+            current_thread.raise(e)
           end
         end
 
@@ -48,11 +52,16 @@ module S3Light
       def destroy_batch(names:, concurrency: 10)
         result = ConcurrentResult.new
         thread_poll = @client.build_thread_poll(concurrency)
+        current_thread = Thread.current
 
         names.each do |name|
           thread_poll.with_connection do |connection|
             new(name: name).__destroy!(connection)
             result.add(name, true)
+
+          rescue Exception => e
+            thread_poll.kill
+            current_thread.raise(e)
           end
         end
 
@@ -66,11 +75,15 @@ module S3Light
       def exists_batch?(names:, concurrency: 10)
         result = ConcurrentResult.new
         thread_poll = @client.build_thread_poll(concurrency)
+        current_thread = Thread.current
 
         names.each do |name|
           thread_poll.with_connection do |connection|
             result.add(name, connection.make_request(:head, "/#{name}"))
           end
+        rescue Exception => e
+          thread_poll.kill
+          current_thread.raise(e)
         end
 
         thread_poll.wait_to_finish
