@@ -120,8 +120,6 @@ These results highlight S3::Light's efficiency in handling individual file opera
 
 You can find the full benchmark script in the `benchmark` directory of this repository. Feel free to run it yourself and compare the results in your specific environment.
 
-... [rest of the content remains the same] ...
-
 ### Connection Reuse and Keep-Alive 🔁
 
 S3::Light implements connection reuse and keep-alive strategies to minimize the overhead of establishing new connections for each request. This significantly reduces latency, especially for applications that make frequent API calls.
