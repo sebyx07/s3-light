@@ -91,14 +91,6 @@ downloads = bucket.objects.download_batch(
 )
 ```
 
-## Performance 🏎️
-
-S3::Light is designed to be fast and efficient. Here's how it achieves its high performance:
-
-# S3::Light 🚀
-
-... [previous content remains the same] ...
-
 ## Performance Benchmarks 📊
 
 We've conducted benchmarks comparing S3::Light with the Amazon S3 gem. The benchmark tests include uploading and downloading a 50MB file 50 times individually.
