@@ -38,7 +38,8 @@ Or install it yourself as:
 client = S3Light::Client.new(
   access_key_id: 'your_access_key',
   secret_access_key: 'your_secret_key',
-  region: 'us-east-1'
+  region: 'us-east-1',
+  endpoint: 'http://localhost:9000'  # For MinIO, use the MinIO server URL
 )
 
 # List all buckets

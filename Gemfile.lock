@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    s3-light (0.0.1)
+    s3-light (1.0.0)
       concurrent-ruby (>= 1.1.6)
       http (>= 5.0.0)
       nokogiri (>= 1.11.0)
