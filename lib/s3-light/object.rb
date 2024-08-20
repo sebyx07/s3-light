@@ -40,6 +40,44 @@ module S3Light
       true
     end
 
+    def acl
+      return @acl if defined?(@acl)
+
+      response = client.with_connection do |connection|
+        connection.make_request(:get, "/#{bucket.name}/#{key}?acl=1")
+      end
+
+      @acl = response.xml.remove_namespaces!.xpath('//AccessControlList/Grant').each_with_object({}) do |grant, result|
+        permission = grant.at_xpath('Permission').text
+        grantee = grant.at_xpath('Grantee')
+
+        grantee_type = grantee['type']
+
+        identifier =
+          case grantee_type
+          when 'CanonicalUser'
+            grantee.at_xpath('ID')&.text || 'CanonicalUser'
+          when 'Group'
+            grantee.at_xpath('URI')&.text
+          else
+            grantee.at_xpath('EmailAddress')&.text
+          end
+
+        result[identifier] = permission if identifier
+      end
+    end
+
+
+    def acl=(new_acl)
+      xml_body = build_acl_xml(new_acl)
+
+      client.with_connection do |connection|
+        connection.make_request(:put, "/#{bucket.name}/#{key}?acl=1", body: xml_body)
+      end
+
+      @acl = new_acl
+    end
+
     def download(to: nil)
       raise S3Light::Error, 'Object does not exist' unless persisted
 
@@ -70,5 +108,26 @@ module S3Light
     def __download(to, connection)
       connection.download_file("/#{bucket.name}/#{key}", to)
     end
+
+    private
+      def build_acl_xml(acl)
+        builder = Nokogiri::XML::Builder.new do |xml|
+          xml.AccessControlPolicy {
+            xml.AccessControlList {
+              acl.each do |grantee, permission|
+                xml.Grant {
+                  xml.Grantee('xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance', 'xsi:type' => 'CanonicalUser') {
+                    xml.ID grantee
+                    xml.DisplayName grantee
+                  }
+                  xml.Permission permission
+                }
+              end
+            }
+          }
+        end
+
+        builder.to_xml
+      end
   end
 end
